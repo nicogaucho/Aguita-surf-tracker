@@ -33,6 +33,12 @@ npm run test:surf   # unit tests for the low-tide scoring logic (node --test)
 
 There is no separate lint/typecheck step in CI; `next build` does typechecking and ESLint.
 
+## Setup & deployment
+
+First-time setup (Supabase project + migration + Google/email providers, VAPID keys,
+Vercel import + env, redirect URLs) is documented step-by-step in
+[`README.md`](README.md) — follow it there rather than duplicating it here.
+
 ## Architecture / data flow
 
 ```
