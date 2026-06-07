@@ -4,16 +4,27 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
+/** Numeric fields are kept as strings while editing so the field can be cleared. */
 interface Prefs {
   enabled: boolean;
-  min_wave_m: number;
-  max_wave_m: number;
-  low_tide_window_h: number;
-  max_wind_kmh: number;
-  hour_start: number;
-  hour_end: number;
+  min_wave_m: string;
+  max_wave_m: string;
+  low_tide_window_h: string;
+  max_wind_kmh: string;
+  hour_start: string;
+  hour_end: string;
   notify_hour: number;
 }
+
+const NUM_DEFAULTS = {
+  min_wave_m: 0.5,
+  max_wave_m: 1.5,
+  low_tide_window_h: 1.5,
+  max_wind_kmh: 18,
+  hour_start: 7,
+  hour_end: 20,
+} as const;
+type NumKey = keyof typeof NUM_DEFAULTS;
 
 type Msg = { kind: "ok" | "err"; text: string } | null;
 
@@ -46,7 +57,20 @@ export default function SettingsClient({
   useEffect(() => {
     fetch("/api/preferences")
       .then((r) => r.json())
-      .then((d) => { if (!d.error) setPrefs(d); })
+      .then((d) => {
+        if (d.error) return;
+        // Stringify numeric fields for editing.
+        setPrefs({
+          enabled: d.enabled,
+          notify_hour: d.notify_hour,
+          min_wave_m: String(d.min_wave_m),
+          max_wave_m: String(d.max_wave_m),
+          low_tide_window_h: String(d.low_tide_window_h),
+          max_wind_kmh: String(d.max_wind_kmh),
+          hour_start: String(d.hour_start),
+          hour_end: String(d.hour_end),
+        });
+      })
       .catch(() => {});
     // Reflect current push subscription state.
     if (supported) {
@@ -135,10 +159,26 @@ export default function SettingsClient({
     if (!prefs) return;
     setBusy(true);
     setMsg(null);
+    // Parse string fields back to numbers; empty/invalid falls back to the default.
+    const num = (k: NumKey) => {
+      const s = String(prefs[k]).trim();
+      if (s === "") return NUM_DEFAULTS[k];
+      const v = Number(s);
+      return Number.isFinite(v) ? v : NUM_DEFAULTS[k];
+    };
+    const payload = {
+      enabled: prefs.enabled,
+      min_wave_m: num("min_wave_m"),
+      max_wave_m: num("max_wave_m"),
+      low_tide_window_h: num("low_tide_window_h"),
+      max_wind_kmh: num("max_wind_kmh"),
+      hour_start: num("hour_start"),
+      hour_end: num("hour_end"),
+    };
     const res = await fetch("/api/preferences", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(prefs),
+      body: JSON.stringify(payload),
     });
     setBusy(false);
     if (res.ok) {
@@ -198,36 +238,36 @@ export default function SettingsClient({
               <div className="field">
                 <label>Min wave (m)</label>
                 <input type="number" step="0.1" value={prefs.min_wave_m}
-                  onChange={(e) => set("min_wave_m", Number(e.target.value))} />
+                  onChange={(e) => set("min_wave_m", e.target.value)} />
               </div>
               <div className="field">
                 <label>Max wave (m)</label>
                 <input type="number" step="0.1" value={prefs.max_wave_m}
-                  onChange={(e) => set("max_wave_m", Number(e.target.value))} />
+                  onChange={(e) => set("max_wave_m", e.target.value)} />
               </div>
             </div>
             <div className="field-row">
               <div className="field">
                 <label>Low-tide window (h)</label>
                 <input type="number" step="0.5" value={prefs.low_tide_window_h}
-                  onChange={(e) => set("low_tide_window_h", Number(e.target.value))} />
+                  onChange={(e) => set("low_tide_window_h", e.target.value)} />
               </div>
               <div className="field">
                 <label>Max wind (km/h)</label>
                 <input type="number" step="1" value={prefs.max_wind_kmh}
-                  onChange={(e) => set("max_wind_kmh", Number(e.target.value))} />
+                  onChange={(e) => set("max_wind_kmh", e.target.value)} />
               </div>
             </div>
             <div className="field-row">
               <div className="field">
                 <label>Start hour</label>
                 <input type="number" min="0" max="23" value={prefs.hour_start}
-                  onChange={(e) => set("hour_start", Number(e.target.value))} />
+                  onChange={(e) => set("hour_start", e.target.value)} />
               </div>
               <div className="field">
                 <label>End hour</label>
                 <input type="number" min="0" max="23" value={prefs.hour_end}
-                  onChange={(e) => set("hour_end", Number(e.target.value))} />
+                  onChange={(e) => set("hour_end", e.target.value)} />
               </div>
             </div>
             <button className="btn btn--primary" type="submit" disabled={busy}>save preferences</button>
