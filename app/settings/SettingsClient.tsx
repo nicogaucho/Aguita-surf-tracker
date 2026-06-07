@@ -115,6 +115,21 @@ export default function SettingsClient({
     }
   }
 
+  async function sendTest() {
+    setBusy(true);
+    setMsg(null);
+    try {
+      const res = await fetch("/api/push/test", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Test failed");
+      setMsg({ kind: "ok", text: `test sent to ${data.sent} device${data.sent === 1 ? "" : "s"} — check your phone.` });
+    } catch (e) {
+      setMsg({ kind: "err", text: e instanceof Error ? e.message : String(e) });
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function savePrefs(e: React.FormEvent) {
     e.preventDefault();
     if (!prefs) return;
@@ -150,7 +165,10 @@ export default function SettingsClient({
         {!supported ? (
           <p className="msg err">this browser doesn&apos;t support push notifications.</p>
         ) : pushOn ? (
-          <button className="btn btn--ghost" onClick={disablePush} disabled={busy}>disable on this device</button>
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+            <button className="btn btn--accent" onClick={sendTest} disabled={busy}>send a test notification</button>
+            <button className="btn btn--ghost" onClick={disablePush} disabled={busy}>disable on this device</button>
+          </div>
         ) : (
           <button className="btn btn--primary" onClick={enablePush} disabled={busy}>enable notifications on this device</button>
         )}
