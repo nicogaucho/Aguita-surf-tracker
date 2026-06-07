@@ -13,11 +13,9 @@ export default async function Home() {
         right={
           <div className="header-actions">
             {user ? (
-              <>
-                <Link className="btn" href="/settings">⚙️ Notifiche</Link>
-              </>
+              <Link className="btn btn--ghost" href="/settings">le mie notifiche</Link>
             ) : (
-              <Link className="btn btn--primary" href="/login">Accedi · Attiva avvisi surf</Link>
+              <Link className="btn btn--primary" href="/login">accedi · attiva avvisi</Link>
             )}
           </div>
         }

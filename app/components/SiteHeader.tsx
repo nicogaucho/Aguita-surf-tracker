@@ -5,17 +5,18 @@ export default function SiteHeader({ right }: { right?: React.ReactNode }) {
   return (
     <header className="site-header">
       <Link className="brand" href="/">
-        <div className="brand-mark" aria-hidden="true">🌊</div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className="brand-logo" src="/brand/aguita-logo-gradient.png" alt="Agüita House" />
         <div className="brand-text">
-          <h1>Agüita <span>Surf</span></h1>
-          <p className="brand-sub">La Cícer Beach · Las Palmas de Gran Canaria</p>
+          <h1>surf</h1>
+          <p className="brand-sub">la cícer · las palmas de gran canaria</p>
         </div>
       </Link>
       <div className="header-actions">
         {right ?? (
           <div className="credits">
             <p>by <strong>Nicola Gasparro</strong> &amp; <strong>Vicente Matus</strong></p>
-            <p className="sponsor">Sponsored by <strong>IDeTIC · ULPGC</strong></p>
+            <p className="sponsor">sponsored by <strong>IDeTIC · ULPGC</strong></p>
           </div>
         )}
       </div>

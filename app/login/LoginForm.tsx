@@ -47,8 +47,8 @@ export default function LoginForm() {
 
   return (
     <>
-      <button className="btn btn--block" onClick={signInGoogle} disabled={busy}>
-        <span aria-hidden="true">🔵</span> Continua con Google
+      <button className="btn btn--ghost btn--block" onClick={signInGoogle} disabled={busy}>
+        continua con google
       </button>
 
       <div className="divider">oppure</div>
@@ -66,7 +66,7 @@ export default function LoginForm() {
           />
         </div>
         <button className="btn btn--primary btn--block" type="submit" disabled={busy || !email}>
-          Inviami un link magico
+          inviami un link magico
         </button>
       </form>
 

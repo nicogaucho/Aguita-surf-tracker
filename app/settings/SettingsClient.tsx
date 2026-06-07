@@ -84,7 +84,7 @@ export default function SettingsClient({
       if (!res.ok) throw new Error((await res.json()).error ?? "Errore salvataggio subscription");
 
       setPushOn(true);
-      setMsg({ kind: "ok", text: "Notifiche attivate su questo dispositivo! 🌊" });
+      setMsg({ kind: "ok", text: "notifiche attivate su questo dispositivo." });
     } catch (e) {
       setMsg({ kind: "err", text: e instanceof Error ? e.message : String(e) });
     } finally {
@@ -148,14 +148,14 @@ export default function SettingsClient({
       <section className="panel">
         <div className="panel-head"><h2>Notifiche push</h2></div>
         {!supported ? (
-          <p className="msg err">Questo browser non supporta le notifiche push.</p>
+          <p className="msg err">questo browser non supporta le notifiche push.</p>
         ) : pushOn ? (
-          <button className="btn" onClick={disablePush} disabled={busy}>🔕 Disattiva su questo dispositivo</button>
+          <button className="btn btn--ghost" onClick={disablePush} disabled={busy}>disattiva su questo dispositivo</button>
         ) : (
-          <button className="btn btn--primary" onClick={enablePush} disabled={busy}>🔔 Attiva notifiche su questo dispositivo</button>
+          <button className="btn btn--primary" onClick={enablePush} disabled={busy}>attiva notifiche su questo dispositivo</button>
         )}
         <p className="note">
-          📱 <strong>Su iPhone</strong>: apri il sito in Safari, tocca <em>Condividi → Aggiungi a Home</em>,
+          <strong>su iPhone</strong>: apri il sito in Safari, tocca <em>Condividi → Aggiungi a Home</em>,
           poi apri l&apos;app dalla Home e attiva qui le notifiche (richiede iOS 16.4+).
         </p>
       </section>
@@ -173,7 +173,7 @@ export default function SettingsClient({
                   type="checkbox"
                   checked={prefs.enabled}
                   onChange={(e) => set("enabled", e.target.checked)}
-                /> {" "}Ricevi avvisi surf
+                /> {" "}ricevi avvisi surf
               </label>
             </div>
             <div className="field-row">
@@ -212,7 +212,7 @@ export default function SettingsClient({
                   onChange={(e) => set("hour_end", Number(e.target.value))} />
               </div>
             </div>
-            <button className="btn btn--primary" type="submit" disabled={busy}>Salva preferenze</button>
+            <button className="btn btn--primary" type="submit" disabled={busy}>salva preferenze</button>
           </>
         )}
       </form>
@@ -220,7 +220,7 @@ export default function SettingsClient({
       {msg && <p className={`msg ${msg.kind}`}>{msg.text}</p>}
 
       <section style={{ marginTop: 24 }}>
-        <button className="btn" onClick={signOut}>Esci ({userEmail})</button>
+        <button className="btn" onClick={signOut}>esci ({userEmail})</button>
       </section>
     </>
   );

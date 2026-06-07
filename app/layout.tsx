@@ -6,11 +6,11 @@ export const metadata: Metadata = {
   description:
     "Live tide, wind and wave conditions for La Cícer beach, Las Palmas de Gran Canaria. Get a push notification when it's a good time to surf.",
   manifest: "/manifest.webmanifest",
-  appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: "Agüita Surf" },
+  appleWebApp: { capable: true, statusBarStyle: "default", title: "Agüita Surf" },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#061826",
+  themeColor: "#5184a8",
   width: "device-width",
   initialScale: 1,
 };

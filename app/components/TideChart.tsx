@@ -85,7 +85,7 @@ function drawTideChart(
   // Surf-window shading (drawn first, behind everything).
   const hourToIdx = new Map<number, number>();
   pts.forEach((p, i) => hourToIdx.set(p.hour, i));
-  ctx.fillStyle = "rgba(43, 217, 196, 0.18)";
+  ctx.fillStyle = "rgba(226, 127, 30, 0.16)";
   for (const win of windows) {
     const i0 = hourToIdx.get(win.startHour);
     const i1 = hourToIdx.get(win.endHour);
@@ -96,8 +96,8 @@ function drawTideChart(
   }
 
   // Grid + Y labels
-  ctx.strokeStyle = "rgba(255,255,255,0.08)";
-  ctx.fillStyle = "#8fb6cf";
+  ctx.strokeStyle = "rgba(75,75,75,0.10)";
+  ctx.fillStyle = "#777777";
   ctx.font = "11px system-ui, sans-serif";
   ctx.lineWidth = 1;
   for (let g = 0; g <= 4; g++) {
@@ -119,8 +119,8 @@ function drawTideChart(
 
   // Area fill
   const grad = ctx.createLinearGradient(0, padT, 0, padT + h);
-  grad.addColorStop(0, "rgba(58,160,255,0.35)");
-  grad.addColorStop(1, "rgba(58,160,255,0.02)");
+  grad.addColorStop(0, "rgba(81,132,168,0.26)");
+  grad.addColorStop(1, "rgba(81,132,168,0.02)");
   ctx.beginPath();
   ctx.moveTo(x(0), y(pts[0].tide as number));
   pts.forEach((p, i) => ctx.lineTo(x(i), y(p.tide as number)));
@@ -134,18 +134,18 @@ function drawTideChart(
   ctx.beginPath();
   ctx.moveTo(x(0), y(pts[0].tide as number));
   pts.forEach((p, i) => ctx.lineTo(x(i), y(p.tide as number)));
-  ctx.strokeStyle = "#3aa0ff";
+  ctx.strokeStyle = "#5184a8";
   ctx.lineWidth = 2.5;
   ctx.stroke();
 
-  // Low-tide minima markers
+  // Low-tide minima markers (sunset orange = the surf-relevant moment)
   const lows = lowTideIndices(pts);
-  ctx.fillStyle = "#ffd166";
+  ctx.fillStyle = "#e27f1e";
   for (const li of lows) {
     ctx.beginPath();
     ctx.arc(x(li), y(pts[li].tide as number), 5, 0, Math.PI * 2);
     ctx.fill();
-    ctx.strokeStyle = "#042032";
+    ctx.strokeStyle = "#ffffff";
     ctx.lineWidth = 2;
     ctx.stroke();
   }
@@ -157,9 +157,9 @@ function drawTideChart(
   if (ni >= 0) {
     ctx.beginPath();
     ctx.arc(x(ni), y(pts[ni].tide as number), 5, 0, Math.PI * 2);
-    ctx.fillStyle = "#2bd9c4";
+    ctx.fillStyle = "#3d6885";
     ctx.fill();
-    ctx.strokeStyle = "#042032";
+    ctx.strokeStyle = "#ffffff";
     ctx.lineWidth = 2;
     ctx.stroke();
   }
