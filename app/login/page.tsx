@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import SiteHeader from "../components/SiteHeader";
 import LoginForm from "./LoginForm";
 import { supabaseConfigured } from "@/lib/supabase/env";
@@ -11,7 +12,9 @@ export default function LoginPage() {
           <h1>Accedi ad Agüita Surf</h1>
           <p className="sub">Ricevi una notifica sullo smartphone quando è il momento giusto per fare surf a La Cícer.</p>
           {supabaseConfigured ? (
-            <LoginForm />
+            <Suspense fallback={<p className="sub">Caricamento…</p>}>
+              <LoginForm />
+            </Suspense>
           ) : (
             <p className="msg err">
               Autenticazione non configurata. Imposta <code>NEXT_PUBLIC_SUPABASE_URL</code> e

@@ -18,7 +18,7 @@ self.addEventListener("push", (event) => {
 
   const title = data.title || "🌊 Agüita Surf";
   const options = {
-    body: data.body || "È un buon momento per fare surf a La Cícer!",
+    body: data.body || "It's a good time for surfing at La Cícer!",
     icon: "/icons/icon-192.png",
     badge: "/icons/icon-192.png",
     tag: data.tag || "surf-alert",
