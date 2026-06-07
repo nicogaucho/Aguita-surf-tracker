@@ -207,10 +207,17 @@ export function windowMessage(win: SurfWindow): { title: string; body: string } 
   const hh = (h: number) => `${String(h).padStart(2, "0")}h`;
   const dir = win.windDir != null ? ` ${compass(win.windDir)}` : "";
   const span = win.startHour === win.endHour ? hh(win.bestHour) : `${hh(win.startHour)}–${hh(win.endHour)}`;
+  // Readable date from win.day ("YYYY-MM-DD"), built in local time to avoid TZ shifts.
+  const [y, m, d] = win.day.split("-").map(Number);
+  const date = new Date(y, m - 1, d).toLocaleDateString("en-GB", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  });
   return {
-    title: "Good surf at La Cícer",
+    title: "Hey, take a break 🏄🏼‍♂️, good conditions at La Cícer",
     body:
-      `${span} at low tide: ${fmt(win.wave, 1)}m waves, ` +
+      `${date} · ${span} at low tide: ${fmt(win.wave, 1)}m waves, ` +
       `${fmt(win.windSpeed, 0)}km/h wind${dir}.`,
   };
 }
