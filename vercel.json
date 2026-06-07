@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/check-surf",
+      "schedule": "0 5 * * *"
+    }
+  ]
+}

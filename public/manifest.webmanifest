@@ -1,0 +1,15 @@
+{
+  "name": "Agüita Surf — La Cícer",
+  "short_name": "Agüita Surf",
+  "description": "Tide, wind & wave conditions for La Cícer beach, plus push alerts when it's a good time to surf.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#061826",
+  "theme_color": "#061826",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

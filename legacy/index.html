@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agüita House Sustainability Lab — La Cícer Beach Conditions</title>
+  <meta name="description" content="Live tide, wind and wave conditions for La Cícer beach, Las Palmas de Gran Canaria. Agüita House Sustainability Lab." />
+  <link rel="preconnect" href="https://marine-api.open-meteo.com" />
+  <link rel="preconnect" href="https://api.open-meteo.com" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">🌊</div>
+      <div class="brand-text">
+        <h1>Agüita House <span>Sustainability Lab</span></h1>
+        <p class="brand-sub">La Cícer Beach · Las Palmas de Gran Canaria</p>
+      </div>
+    </div>
+    <div class="credits">
+      <p>by <strong>Nicola Gasparro</strong> &amp; <strong>Vicente Matus</strong></p>
+      <p class="sponsor">Sponsored by <strong>IDeTIC · ULPGC</strong></p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="status-bar" id="statusBar" aria-live="polite">
+      <span class="dot" id="statusDot"></span>
+      <span id="statusText">Loading live data…</span>
+    </section>
+
+    <!-- Current conditions -->
+    <section class="cards" aria-label="Current conditions">
+      <article class="card card--tide">
+        <h2>Tide</h2>
+        <div class="card-main"><span id="curTide" class="big">—</span><span class="unit">m</span></div>
+        <p class="card-sub" id="curTideTrend">sea level (MSL)</p>
+      </article>
+
+      <article class="card card--wind">
+        <h2>Wind</h2>
+        <div class="card-main"><span id="curWind" class="big">—</span><span class="unit">km/h</span></div>
+        <p class="card-sub">
+          <span class="compass" id="curWindArrow" aria-hidden="true">↑</span>
+          <span id="curWindDir">—</span>
+        </p>
+      </article>
+
+      <article class="card card--wave">
+        <h2>Waves</h2>
+        <div class="card-main"><span id="curWave" class="big">—</span><span class="unit">m</span></div>
+        <p class="card-sub" id="curWaveSub">significant wave height</p>
+      </article>
+    </section>
+
+    <!-- Day selector -->
+    <nav class="day-nav" id="dayNav" aria-label="Choose day"></nav>
+
+    <!-- Tide chart -->
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Tide by the hour</h2>
+        <span class="panel-meta" id="tideRange"></span>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="tideChart" height="220" role="img" aria-label="Hourly tide chart"></canvas>
+      </div>
+    </section>
+
+    <!-- Hourly table -->
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Hourly forecast</h2>
+        <span class="panel-meta">tide · wind · waves</span>
+      </div>
+      <div class="table-wrap">
+        <table class="hourly" id="hourlyTable">
+          <thead>
+            <tr>
+              <th scope="col">Hour</th>
+              <th scope="col">Tide (m)</th>
+              <th scope="col">Wind</th>
+              <th scope="col">Wave (m)</th>
+            </tr>
+          </thead>
+          <tbody id="hourlyBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <p>Data: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>
+        free open weather &amp; marine API (no key required). Tide = sea-level height above mean sea level.</p>
+      <p class="coords" id="coords"></p>
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
