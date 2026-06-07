@@ -41,17 +41,17 @@ export default function LoginForm() {
     if (error) {
       setMsg({ kind: "err", text: error.message });
     } else {
-      setMsg({ kind: "ok", text: "Ti abbiamo inviato un link magico via email. Aprilo su questo dispositivo." });
+      setMsg({ kind: "ok", text: "We've sent you a magic link by email. Open it on this device." });
     }
   }
 
   return (
     <>
       <button className="btn btn--ghost btn--block" onClick={signInGoogle} disabled={busy}>
-        continua con google
+        continue with google
       </button>
 
-      <div className="divider">oppure</div>
+      <div className="divider">or</div>
 
       <form onSubmit={signInEmail}>
         <div className="field">
@@ -60,13 +60,13 @@ export default function LoginForm() {
             id="email"
             type="email"
             required
-            placeholder="tu@email.com"
+            placeholder="you@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <button className="btn btn--primary btn--block" type="submit" disabled={busy || !email}>
-          inviami un link magico
+          send me a magic link
         </button>
       </form>
 

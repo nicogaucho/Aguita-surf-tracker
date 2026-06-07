@@ -9,15 +9,15 @@ export default function LoginPage() {
       <SiteHeader right={<span />} />
       <div className="auth-wrap">
         <div className="auth-card">
-          <h1>Accedi ad Agüita Surf</h1>
-          <p className="sub">Ricevi una notifica sullo smartphone quando è il momento giusto per fare surf a La Cícer.</p>
+          <h1>Sign in to Agüita Surf</h1>
+          <p className="sub">Get a notification on your phone when it&apos;s a good time to surf at La Cícer.</p>
           {supabaseConfigured ? (
-            <Suspense fallback={<p className="sub">Caricamento…</p>}>
+            <Suspense fallback={<p className="sub">Loading…</p>}>
               <LoginForm />
             </Suspense>
           ) : (
             <p className="msg err">
-              Autenticazione non configurata. Imposta <code>NEXT_PUBLIC_SUPABASE_URL</code> e
+              Authentication not configured. Set <code>NEXT_PUBLIC_SUPABASE_URL</code> and
               {" "}<code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> in <code>.env.local</code>.
             </p>
           )}

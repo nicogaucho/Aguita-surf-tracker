@@ -208,10 +208,10 @@ export function windowMessage(win: SurfWindow): { title: string; body: string } 
   const dir = win.windDir != null ? ` ${compass(win.windDir)}` : "";
   const span = win.startHour === win.endHour ? hh(win.bestHour) : `${hh(win.startHour)}–${hh(win.endHour)}`;
   return {
-    title: "🌊 Buon surf a La Cícer!",
+    title: "Good surf at La Cícer",
     body:
-      `${span} (bassa marea): onda ${fmt(win.wave, 1)}m, ` +
-      `vento ${fmt(win.windSpeed, 0)}km/h${dir}.`,
+      `${span} at low tide: ${fmt(win.wave, 1)}m waves, ` +
+      `${fmt(win.windSpeed, 0)}km/h wind${dir}.`,
   };
 }
 

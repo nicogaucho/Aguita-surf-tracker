@@ -8,15 +8,15 @@ export default function SiteHeader({ right }: { right?: React.ReactNode }) {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className="brand-logo" src="/brand/aguita-logo-gradient.png" alt="Agüita House" />
         <div className="brand-text">
-          <h1>surf</h1>
-          <p className="brand-sub">la cícer · las palmas de gran canaria</p>
+          <h1>Agüita surf tracker</h1>
+          <p className="brand-sub">La cícer surf spot · Las Palmas de Gran Canaria</p>
         </div>
       </Link>
       <div className="header-actions">
         {right ?? (
           <div className="credits">
             <p>by <strong>Nicola Gasparro</strong> &amp; <strong>Vicente Matus</strong></p>
-            <p className="sponsor">sponsored by <strong>IDeTIC · ULPGC</strong></p>
+            <p className="sponsor">sponsored by <strong>IDeTIC · ULPGC - @Digital Consulting Agüita SL</strong></p>
           </div>
         )}
       </div>

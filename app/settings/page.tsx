@@ -15,8 +15,8 @@ export default async function SettingsPage() {
     <>
       <SiteHeader right={<span />} />
       <div className="container" style={{ maxWidth: 640 }}>
-        <h1 style={{ marginTop: 8 }}>Le tue notifiche surf</h1>
-        <p style={{ color: "var(--muted)" }}>Connesso come <strong>{user.email}</strong></p>
+        <h1 style={{ marginTop: 8 }}>Your surf alerts</h1>
+        <p style={{ color: "var(--fg-2)" }}>Signed in as <strong>{user.email}</strong></p>
         <SettingsClient vapidPublicKey={vapidKey} userEmail={user.email ?? ""} />
       </div>
     </>

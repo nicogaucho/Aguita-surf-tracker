@@ -107,7 +107,7 @@ export default function Dashboard() {
             className={`day-btn${day === activeDay ? " active" : ""}`}
             onClick={() => setActiveDay(day)}
           >
-            {day === todayKey ? "oggi" : dayLabel(day)}
+            {day === todayKey ? "today" : dayLabel(day)}
           </button>
         ))}
       </nav>
@@ -176,12 +176,12 @@ export default function Dashboard() {
 }
 
 function SurfBanner({ windows, isToday }: { windows: SurfWindow[]; isToday: boolean }) {
-  const when = isToday ? "oggi" : "in questo giorno";
+  const when = isToday ? "today" : "on this day";
   if (!windows.length) {
     return (
       <section className="surf-banner none">
         <span className="tag" aria-hidden="true">≈</span>
-        <span>nessuna finestra di buon surf {when} — serve bassa marea con onda 0.5–1.5 m e vento leggero.</span>
+        <span>no good surf window {when} — needs low tide with 0.5–1.5 m waves and light wind.</span>
       </section>
     );
   }
@@ -193,9 +193,9 @@ function SurfBanner({ windows, isToday }: { windows: SurfWindow[]; isToday: bool
     <section className="surf-banner">
       <span className="tag" aria-hidden="true">≈</span>
       <span>
-        buon surf {when}: <strong>{span}</strong> in bassa marea — onda {fmt(best.wave, 1)} m, vento {fmt(best.windSpeed, 0)} km/h
+        good surf {when}: <strong>{span}</strong> at low tide — {fmt(best.wave, 1)} m waves, {fmt(best.windSpeed, 0)} km/h wind
         {best.windDir != null ? ` ${compass(best.windDir)}` : ""}.
-        {windows.length > 1 ? ` (+${windows.length - 1} altra finestra)` : ""}
+        {windows.length > 1 ? ` (+${windows.length - 1} more)` : ""}
       </span>
     </section>
   );

@@ -61,9 +61,9 @@ export default function SettingsClient({
     setBusy(true);
     setMsg(null);
     try {
-      if (!vapidPublicKey) throw new Error("Chiave VAPID pubblica mancante (NEXT_PUBLIC_VAPID_PUBLIC_KEY).");
+      if (!vapidPublicKey) throw new Error("Missing public VAPID key (NEXT_PUBLIC_VAPID_PUBLIC_KEY).");
       const permission = await Notification.requestPermission();
-      if (permission !== "granted") throw new Error("Permesso notifiche negato dal browser.");
+      if (permission !== "granted") throw new Error("Notification permission denied by the browser.");
 
       const reg = await navigator.serviceWorker.register("/sw.js");
       await navigator.serviceWorker.ready;
@@ -81,10 +81,10 @@ export default function SettingsClient({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(sub),
       });
-      if (!res.ok) throw new Error((await res.json()).error ?? "Errore salvataggio subscription");
+      if (!res.ok) throw new Error((await res.json()).error ?? "Failed to save subscription");
 
       setPushOn(true);
-      setMsg({ kind: "ok", text: "notifiche attivate su questo dispositivo." });
+      setMsg({ kind: "ok", text: "notifications enabled on this device." });
     } catch (e) {
       setMsg({ kind: "err", text: e instanceof Error ? e.message : String(e) });
     } finally {
@@ -107,7 +107,7 @@ export default function SettingsClient({
         await sub.unsubscribe();
       }
       setPushOn(false);
-      setMsg({ kind: "ok", text: "Notifiche disattivate su questo dispositivo." });
+      setMsg({ kind: "ok", text: "notifications disabled on this device." });
     } catch (e) {
       setMsg({ kind: "err", text: e instanceof Error ? e.message : String(e) });
     } finally {
@@ -127,9 +127,9 @@ export default function SettingsClient({
     });
     setBusy(false);
     if (res.ok) {
-      setMsg({ kind: "ok", text: "Preferenze salvate." });
+      setMsg({ kind: "ok", text: "Preferences saved." });
     } else {
-      setMsg({ kind: "err", text: (await res.json()).error ?? "Errore salvataggio" });
+      setMsg({ kind: "err", text: (await res.json()).error ?? "Save failed" });
     }
   }
 
@@ -146,25 +146,25 @@ export default function SettingsClient({
     <>
       {/* Push activation */}
       <section className="panel">
-        <div className="panel-head"><h2>Notifiche push</h2></div>
+        <div className="panel-head"><h2>Push notifications</h2></div>
         {!supported ? (
-          <p className="msg err">questo browser non supporta le notifiche push.</p>
+          <p className="msg err">this browser doesn&apos;t support push notifications.</p>
         ) : pushOn ? (
-          <button className="btn btn--ghost" onClick={disablePush} disabled={busy}>disattiva su questo dispositivo</button>
+          <button className="btn btn--ghost" onClick={disablePush} disabled={busy}>disable on this device</button>
         ) : (
-          <button className="btn btn--primary" onClick={enablePush} disabled={busy}>attiva notifiche su questo dispositivo</button>
+          <button className="btn btn--primary" onClick={enablePush} disabled={busy}>enable notifications on this device</button>
         )}
         <p className="note">
-          <strong>su iPhone</strong>: apri il sito in Safari, tocca <em>Condividi → Aggiungi a Home</em>,
-          poi apri l&apos;app dalla Home e attiva qui le notifiche (richiede iOS 16.4+).
+          <strong>on iPhone</strong>: open the site in Safari, tap <em>Share → Add to Home Screen</em>,
+          then open the app from the Home Screen and enable notifications here (requires iOS 16.4+).
         </p>
       </section>
 
       {/* Preferences */}
       <form className="panel" onSubmit={savePrefs}>
-        <div className="panel-head"><h2>Condizioni surf preferite</h2></div>
+        <div className="panel-head"><h2>Preferred surf conditions</h2></div>
         {!prefs ? (
-          <p style={{ color: "var(--muted)" }}>Caricamento preferenze…</p>
+          <p style={{ color: "var(--fg-2)" }}>Loading preferences…</p>
         ) : (
           <>
             <div className="field">
@@ -173,46 +173,46 @@ export default function SettingsClient({
                   type="checkbox"
                   checked={prefs.enabled}
                   onChange={(e) => set("enabled", e.target.checked)}
-                /> {" "}ricevi avvisi surf
+                /> {" "}receive surf alerts
               </label>
             </div>
             <div className="field-row">
               <div className="field">
-                <label>Onda minima (m)</label>
+                <label>Min wave (m)</label>
                 <input type="number" step="0.1" value={prefs.min_wave_m}
                   onChange={(e) => set("min_wave_m", Number(e.target.value))} />
               </div>
               <div className="field">
-                <label>Onda massima (m)</label>
+                <label>Max wave (m)</label>
                 <input type="number" step="0.1" value={prefs.max_wave_m}
                   onChange={(e) => set("max_wave_m", Number(e.target.value))} />
               </div>
             </div>
             <div className="field-row">
               <div className="field">
-                <label>Tolleranza bassa marea (h)</label>
+                <label>Low-tide window (h)</label>
                 <input type="number" step="0.5" value={prefs.low_tide_window_h}
                   onChange={(e) => set("low_tide_window_h", Number(e.target.value))} />
               </div>
               <div className="field">
-                <label>Vento massimo (km/h)</label>
+                <label>Max wind (km/h)</label>
                 <input type="number" step="1" value={prefs.max_wind_kmh}
                   onChange={(e) => set("max_wind_kmh", Number(e.target.value))} />
               </div>
             </div>
             <div className="field-row">
               <div className="field">
-                <label>Ora inizio</label>
+                <label>Start hour</label>
                 <input type="number" min="0" max="23" value={prefs.hour_start}
                   onChange={(e) => set("hour_start", Number(e.target.value))} />
               </div>
               <div className="field">
-                <label>Ora fine</label>
+                <label>End hour</label>
                 <input type="number" min="0" max="23" value={prefs.hour_end}
                   onChange={(e) => set("hour_end", Number(e.target.value))} />
               </div>
             </div>
-            <button className="btn btn--primary" type="submit" disabled={busy}>salva preferenze</button>
+            <button className="btn btn--primary" type="submit" disabled={busy}>save preferences</button>
           </>
         )}
       </form>
@@ -220,7 +220,7 @@ export default function SettingsClient({
       {msg && <p className={`msg ${msg.kind}`}>{msg.text}</p>}
 
       <section style={{ marginTop: 24 }}>
-        <button className="btn" onClick={signOut}>esci ({userEmail})</button>
+        <button className="btn" onClick={signOut}>sign out ({userEmail})</button>
       </section>
     </>
   );
