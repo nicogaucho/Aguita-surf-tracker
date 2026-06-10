@@ -56,6 +56,63 @@ minimo della curva di marea), vento < 18 km/h, ore 07–20. Le soglie vivono in
   Dopo aver fatto login e attivato le notifiche da `/settings`. Se ci sono finestre buone
   oggi arriva la notifica; un secondo invio nello stesso giorno è bloccato (anti-spam).
 
+## Demo dal vivo (workshop) — forzare la notifica in produzione
+
+Per mostrare la notifica agli utenti registrati **indipendentemente dal meteo**, si impostano
+soglie permissive nelle preferenze e si lancia il cron di produzione a mano. Solo interfaccia:
+nessuna modifica al codice, nessun deploy.
+
+1. **Ogni utente** in `/settings`: attiva il push sul device, poi salva questi valori TEST
+   (con *receive surf alerts* ON) — Min wave `0`, Max wave `10`, Low-tide window `24`,
+   Max wind `200`, Start hour `0`, End hour `23`. Così ogni ora con dati passa la regola →
+   almeno una finestra → la notifica parte.
+
+2. **Lancia il trigger** (dalla root del progetto; legge `CRON_SECRET` da `.env.local`):
+
+   ```bash
+   SECRET=$(grep -E '^CRON_SECRET=' .env.local | cut -d= -f2- | tr -d '"'"'"' ')
+   curl -s "https://aguita-surf-tracker.vercel.app/api/cron/check-surf?secret=$SECRET" | jq
+   ```
+   
+   > L'assegnazione `SECRET=` deve stare su una **riga separata** dal `curl`, altrimenti la
+   > shell espande `$SECRET` prima di valorizzarlo e ottieni `{ "error": "forbidden" }`.
+
+   Demo riuscita: la risposta ha `usersNotified ≥ 1` e `pushSent ≥ 1`.
+
+3. **Re-run nello stesso giorno**: l'anti-spam invia **1 sola notifica per utente al giorno**.
+   Per ripetere la demo bisogna prima svuotare il log di oggi. Comando combinato (cancella il
+   log via REST con la service role key + ri-triggera), tutto da terminale:
+
+   ```bash
+   URL=$(grep '^NEXT_PUBLIC_SUPABASE_URL=' .env.local | cut -d= -f2- | tr -d '"'"'"' ')
+   KEY=$(grep '^SUPABASE_SERVICE_ROLE_KEY=' .env.local | cut -d= -f2- | tr -d '"'"'"' ')
+   SECRET=$(grep '^CRON_SECRET=' .env.local | cut -d= -f2- | tr -d '"'"'"' ')
+   curl -s -X DELETE "$URL/rest/v1/notifications_log?day=eq.$(date +%F)" \
+     -H "apikey: $KEY" -H "Authorization: Bearer $KEY"
+   curl -s "https://aguita-surf-tracker.vercel.app/api/cron/check-surf?secret=$SECRET" | jq
+   ```
+
+   In alternativa, solo lo svuotamento da *Supabase → SQL Editor*:
+
+   ```sql
+   delete from public.notifications_log where day = current_date;
+   ```
+
+   **Diagnostica** (chi è abilitato, chi ha il push, soglie attive) — utile se `usersNotified`
+   resta 0: un utente riceve solo se è `enabled`, ha una **push subscription** e ha **soglie
+   permissive** (con i default la notifica dipende dal meteo reale). Un intervallo orario
+   invertito (`hour_start > hour_end`) non produce mai finestre.
+
+   ```bash
+   curl -s "$URL/rest/v1/surf_preferences?select=user_id,enabled,min_wave_m,max_wave_m,low_tide_window_h,max_wind_kmh,hour_start,hour_end" \
+     -H "apikey: $KEY" -H "Authorization: Bearer $KEY" | jq
+   curl -s "$URL/rest/v1/push_subscriptions?select=user_id,created_at" \
+     -H "apikey: $KEY" -H "Authorization: Bearer $KEY" | jq
+   ```
+
+4. **Fine demo — ripristina i default** (in `/settings`, oppure via SQL):
+   `0.5` / `1.5` / `1.5` / `18` / `7` / `20`.
+
 ## Deploy in produzione (Vercel)
 
 1. `git init && git add -A && git commit` → push su GitHub.
